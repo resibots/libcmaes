@@ -35,13 +35,13 @@ namespace libcmaes
   typedef std::function<void(const dMat&, const dMat&)> EvalFunc;
   typedef std::function<dMat(void)> AskFunc;
   typedef std::function<void(void)> TellFunc;
-  
+
   template<class TParameters,class TSolutions>
     using ProgressFunc = std::function<int (const TParameters&, const TSolutions&)>; // template aliasing.
 
   template<class TParameters,class TSolutions>
     using PlotFunc = std::function<int (const TParameters&, const TSolutions&, std::ofstream &fplotstream)>;
-  
+
   /**
    * \brief Main class describing an evolutionary optimization strategy.
    *        Every algorithm in libcmaes descends from this class, and bring
@@ -57,7 +57,7 @@ namespace libcmaes
     ESOStrategy()
       {
       }
-    
+
     /**
      * \brief constructor
      * @param func function to minimize
@@ -75,7 +75,7 @@ namespace libcmaes
     ESOStrategy(FitFunc &func,
 		TParameters &parameters,
 		const TSolutions &solutions);
-    
+
   protected:
     ~ESOStrategy();
 
@@ -89,13 +89,13 @@ namespace libcmaes
     /**
      * \brief Evaluates a set of candidates against the objective function.
      *        The procedure is multithreaded and stores both the candidates
-     *        and their f-value into the _solutions object that bears the 
+     *        and their f-value into the _solutions object that bears the
      *        current set of potential solutions to the optimization problem.
      * @param candidates A matrix whose rows contain the candidates.
-     * @param phenocandidates The candidates transformed into phenotype, 
+     * @param phenocandidates The candidates transformed into phenotype,
      *        leave empty if no pheno transform.
      */
-    void eval(const dMat &candidates,
+    virtual void eval(const dMat &candidates,
 	      const dMat &phenocandidates=dMat(0,0));
 
     /**
@@ -112,7 +112,7 @@ namespace libcmaes
 
     /**
      * \brief Finds the minimum of the objective function. It makes
-     *        alternative calls to ask(), tell() and stop() until 
+     *        alternative calls to ask(), tell() and stop() until
      *        one of the termination criteria triggers.
      * @param evalf custom eval function
      * @param askf custom ask function
@@ -120,7 +120,7 @@ namespace libcmaes
      * @return success or error code, as defined in opti_err.h
      */
     int optimize(const EvalFunc &evalf, const AskFunc &askf, const TellFunc &tellf);
-    
+
     /**
      * \brief increment iteration count.
      */
@@ -137,7 +137,7 @@ namespace libcmaes
      * @param gfunc gradient function
      */
     void set_gradient_func(GradFunc &gfunc) { _gfunc = gfunc; }
-    
+
     /**
      * \brief Sets the possibly custom progress function,
      *        that is called in between every search step, and gives an outside
@@ -165,7 +165,7 @@ namespace libcmaes
      * @param pffunc a stream to file output function
      */
     void set_plot_func(PlotFunc<TParameters,TSolutions> &pffunc) { if (!_parameters._full_fplot) _pffunc = pffunc; }
-    
+
     /**
      * \brief returns numerical gradient of objective function at x.
      * @param x point at which to compute the gradient
@@ -243,7 +243,7 @@ namespace libcmaes
     Candidate best_solution() const;
 
     void set_initial_elitist(const bool &e) { _initial_elitist = e; }
-    
+
   protected:
     FitFunc _func; /**< the objective function. */
     int _nevals;  /**< number of function evaluations. */
@@ -261,7 +261,7 @@ namespace libcmaes
     std::uniform_real_distribution<> _uhunif;
     Eigen::EigenMultivariateNormal<double> _uhesolver;
   };
-  
+
 }
 
 #endif

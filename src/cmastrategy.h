@@ -49,7 +49,7 @@ namespace libcmaes
        * \brief dummy constructor
        */
       CMAStrategy();
-    
+
       /**
        * \brief constructor.
        * @param func objective function to minimize
@@ -67,30 +67,30 @@ namespace libcmaes
       CMAStrategy(FitFunc &func,
 		  CMAParameters<TGenoPheno> &parameters,
 		  const CMASolutions &cmasols);
-    
+
       ~CMAStrategy();
 
       /**
-       * \brief generates nsols new candidate solutions, sampled from a 
+       * \brief generates nsols new candidate solutions, sampled from a
        *        multivariate normal distribution.
        * return A matrix whose rows contain the candidate points.
        */
-      dMat ask();
+      virtual dMat ask();
 
       /**
        * \brief Updates the covariance matrix and prepares for the next iteration.
        */
-      void tell();
+      virtual void tell();
 
       /**
        * \brief Stops search on a set of termination criterias, see reference paper.
        * @return true if search must stop, false otherwise.
        */
-      bool stop();
+      virtual bool stop();
 
       /**
        * \brief Finds the minimum of the objective function. It makes
-       *        alternate calls to ask(), tell() and stop() until 
+       *        alternate calls to ask(), tell() and stop() until
        *        one of the termination criteria triggers.
        * @param evalf custom eval function
        * @param askf custom ask function
@@ -102,7 +102,7 @@ namespace libcmaes
 
       /**
        * \brief Finds the minimum of the objective function. It makes
-       *        alternate calls to ask(), tell() and stop() until 
+       *        alternate calls to ask(), tell() and stop() until
        *        one of the termination criteria triggers.
        * @return success or error code, as defined in opti_err.h
        * Note: the termination criteria code is held by _solutions._run_status
@@ -115,21 +115,21 @@ namespace libcmaes
     }
 
       /**
-       * \brief Stream the internal state of the search into an output file, 
+       * \brief Stream the internal state of the search into an output file,
        *        as defined in the _parameters object.
        */
       void plot();
-    
+
     protected:
       Eigen::EigenMultivariateNormal<double> _esolver;  /**< multivariate normal distribution sampler, and eigendecomposition solver. */
       CMAStopCriteria<TGenoPheno> _stopcriteria; /**< holds the set of termination criteria, see reference paper. */
       std::ofstream *_fplotstream = nullptr; /**< plotting file stream, not in parameters because of copy-constructor hell. */
-    
+
     public:
     static ProgressFunc<CMAParameters<TGenoPheno>,CMASolutions> _defaultPFunc; /**< the default progress function. */
     static PlotFunc<CMAParameters<TGenoPheno>,CMASolutions> _defaultFPFunc; /**< the default plot to file function. */
     };
-  
+
 }
 
 #endif

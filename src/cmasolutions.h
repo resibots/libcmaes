@@ -33,7 +33,7 @@
 
 namespace libcmaes
 {
-  
+
   /**
    * \brief Holder of the set of evolving solutions from running an instance
    *        of CMA-ES.
@@ -54,7 +54,7 @@ namespace libcmaes
     template <template <class X,class Y> class U, class V, class W> friend class ACMSurrogateStrategy;
 #endif
     friend class VDCMAUpdate;
-    
+
   public:
     /**
      * \brief dummy constructor.
@@ -67,7 +67,7 @@ namespace libcmaes
      */
     template<class TGenoPheno=GenoPheno<NoBoundStrategy>>
     CMASolutions(Parameters<TGenoPheno> &p);
-    
+
     ~CMASolutions();
 
     /**
@@ -87,7 +87,7 @@ namespace libcmaes
     void update_best_candidates();
 
     /**
-     * \brief updates reference eigenvalue and eigenvectors, for use in 
+     * \brief updates reference eigenvalue and eigenvectors, for use in
      *        termination criteria.
      * @see CMAStopCriteria
      */
@@ -109,6 +109,15 @@ namespace libcmaes
 	  else return Candidate(std::numeric_limits<double>::quiet_NaN(),_xmean);
 	}
       return _best_candidates_hist.back();
+    }
+
+    /**
+     * \brief returns the initial candidate.
+     * @return initial candidate
+     */
+    inline Candidate initial_candidate() const
+    {
+      return _initial_candidate;
     }
 
     /**
@@ -150,7 +159,7 @@ namespace libcmaes
     {
       return _candidates;
     }
-    
+
     /**
      * \brief number of candidate solutions.
      * @return current number of solution candidates.
@@ -166,7 +175,7 @@ namespace libcmaes
      * Note: experimental.
      */
     void reset();
-    
+
     /**
      * \brief re-arrange solution object such that parameter 'k' is fixed (i.e. removed).
      * @param k index of the parameter to remove.
@@ -195,7 +204,7 @@ namespace libcmaes
     {
       return _xmean.size();
     }
-    
+
     /**
      * \brief returns expected distance to minimum.
      * @return edm
@@ -222,7 +231,7 @@ namespace libcmaes
     {
       return _cov;
     }
-    
+
     /**
      * \brief returns pointer to covariance matrix array
      * @return pointer to covariance matrix array
@@ -231,7 +240,7 @@ namespace libcmaes
     {
       return _cov.data();
     }
-    
+
     /**
      * \brief returns full covariance matrix. Similar to cov() but in case of linear-sized
      *        algorithms like sep and vd, returns the full covariance matrix anyways.
@@ -256,7 +265,7 @@ namespace libcmaes
     {
       return _sepcov;
     }
-    
+
     /**
      * \brief returns pointer to covariance diagnoal vector
      * @return pointer to covariance diagonal array
@@ -305,7 +314,7 @@ namespace libcmaes
       dVec phen_xmean_std = cmaparams.get_gp().pheno(static_cast<dVec>(_xmean + stds));
       return (phen_xmean_std - phen_xmean).cwiseAbs();
     }
-    
+
     /**
      * \returns standard deviation vector
      * @param cmaparams parameter object that hold the genotype/phenotype transform
@@ -364,7 +373,7 @@ namespace libcmaes
     {
       _xmean = xmean;
     }
-    
+
     /**
      * \brief returns current optimization status.
      * @return status
@@ -400,7 +409,7 @@ namespace libcmaes
     {
       return _elapsed_last_iter;
     }
-    
+
     /**
      * \brief returns current number of iterations
      * @return number of iterations
@@ -418,7 +427,7 @@ namespace libcmaes
     {
       return _nevals;
     }
-    
+
     /**
      * \brief returns current minimal eigen value
      * @return minimal eigen value
@@ -463,7 +472,7 @@ namespace libcmaes
     {
       return _leigenvalues;
     }
-    
+
     /**
      * \brief returns last computed eigenvectors
      * @return last computed eigenvectors
@@ -472,7 +481,16 @@ namespace libcmaes
     {
       return _leigenvectors;
     }
-    
+
+    /**
+     * \brief returns the uncertainty level computed by uncertainty handling procedure
+     * @return the uncertainty level computed by uncertainty handling procedure
+     */
+    inline double suh() const
+    {
+      return _suh;
+    }
+
     /**
      * \brief print the solution object out.
      * @param out output stream
@@ -496,7 +514,7 @@ namespace libcmaes
     std::vector<Candidate> _candidates; /**< current set of candidate solutions. */
     std::vector<Candidate> _best_candidates_hist; /**< history of best candidate solutions. */
     int _max_hist = -1; /**< max size of the history, keeps memory requirements fixed. */
-    
+
     double _max_eigenv = 0.0; /**< max eigenvalue, for termination criteria. */
     double _min_eigenv = 0.0; /**< min eigenvalue, for termination criteria. */
     dVec _leigenvalues; /**< last computed eigenvalues, for termination criteria. */
@@ -507,7 +525,7 @@ namespace libcmaes
     std::vector<Candidate> _k_best_candidates_hist; /**< k-th best candidate history, for termination criteria, k is kcand=1+floor(0.1+lambda/4). */
     std::vector<double> _bfvalues; /**< best function values over the past 20 steps, for termination criteria. */
     std::vector<double> _median_fvalues; /**< median function values of some steps, in the past, for termination criteria. */
-    
+
     int _eigeniter = 0; /**< eigenvalues computation last step, lazy-update only. */
     bool _updated_eigen = true; /**< last update is not lazy. */
 
@@ -529,13 +547,13 @@ namespace libcmaes
     int _best_seen_iter;
     Candidate _worst_seen_candidate;
     Candidate _initial_candidate;
-    
+
     dVec _v; /**< complementary vector for use in vdcma. */
 
     std::vector<RankedCandidate> _candidates_uh; /**< temporary set of candidates used by uncertainty handling scheme. */
     int _lambda_reev; /**< number of reevaluated solutions at current step. */
     double _suh; /**< uncertainty level computed by uncertainty handling procedure. */
-    
+
     double _tpa_s = 0.0;
     int _tpa_p1 = 0;
     int _tpa_p2 = 1;
@@ -545,7 +563,7 @@ namespace libcmaes
   };
 
   std::ostream& operator<<(std::ostream &out,const CMASolutions &cmas);
-  
+
 }
 
 #endif

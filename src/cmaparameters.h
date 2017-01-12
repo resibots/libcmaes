@@ -44,10 +44,10 @@ namespace libcmaes
       friend class ACovarianceUpdate;
       template <class U> friend class errstats;
       friend class VDCMAUpdate;
-      
+
     public:
       CMAParameters() {} //TODO: var init even if this constructor is not supposed to be used for now.
-      
+
       /**
        * \brief Constructor.
        * @param dim problem dimensions
@@ -64,7 +64,7 @@ namespace libcmaes
 		    const int &lambda=-1,
 		    const uint64_t &seed=0,
 		    const TGenoPheno &gp=TGenoPheno());
-      
+
       /**
        * \brief Constructor.
        * @param x0 initial search point as vector of problem dimension
@@ -79,7 +79,7 @@ namespace libcmaes
 		    const int &lambda=-1,
 		    const uint64_t &seed=0,
 		    const TGenoPheno &gp=TGenoPheno());
-      
+
       /**
        * \brief Constructor.
        * @param x0 initial search point as vector of problem dimension
@@ -95,26 +95,26 @@ namespace libcmaes
 		    const std::vector<double> &lbounds=std::vector<double>(),
 		    const std::vector<double> &ubounds=std::vector<double>(),
 		    const uint64_t &seed=0);
-      
+
       ~CMAParameters();
-      
+
       /**
        * \brief initialize required parameters based on dim, lambda, x0 and sigma.
        */
       void initialize_parameters();
 
-      
+
       void reset_as_fixed(const int &k);
-      
+
       /**
        * \brief adapt parameters for noisy objective function.
        */
       void set_noisy();
-      
+
       /**
        * \brief sets the optimization algorithm.
        *        Note: overrides Parameters::set_algo
-       * @param algo from CMAES_DEFAULT, IPOP_CMAES, BIPOP_CMAES, aCMAES, aIPOP_CMAES, aBIPOP_CMAES, sepCMAES, sepIPOP_CMAES, sepBIPOP_CMAES, sepaCMAES, sepaIPOP_CMAES, sepaBIPOP_CMAES, VD_CMAES, VD_IPOP_CMAES, VD_BIPOP_CMAES 
+       * @param algo from CMAES_DEFAULT, IPOP_CMAES, BIPOP_CMAES, aCMAES, aIPOP_CMAES, aBIPOP_CMAES, sepCMAES, sepIPOP_CMAES, sepBIPOP_CMAES, sepaCMAES, sepaIPOP_CMAES, sepaBIPOP_CMAES, VD_CMAES, VD_IPOP_CMAES, VD_BIPOP_CMAES
        */
       void set_algo(const int &algo)
       {
@@ -158,7 +158,7 @@ namespace libcmaes
       }
 
       /**
-       * \brief activates the gradient injection scheme. 
+       * \brief activates the gradient injection scheme.
        *        If no gradient function is defined, injects a numerical gradient solution instead
        *        Note: overrides Parameters::set_gradient
        * @param gradient true/false
@@ -169,7 +169,7 @@ namespace libcmaes
 	/*if (this->_tpa != 0)
 	  set_tpa(2);*/ // TPA default when gradient is activated.
       }
-      
+
       /**
        * \brief fix parameters for sep-CMA-ES, using only the diagonal of covariance matrix.
        */
@@ -191,7 +191,7 @@ namespace libcmaes
        * @return vd status
        */
       bool is_vd() const { return _vd; }
-      
+
       /**
        * \brief freezes a parameter to a given value in genotype during optimization.
        *        Adapts some generic parameters as well.
@@ -199,13 +199,13 @@ namespace libcmaes
        * @param value frozen value of the parameter
        */
       void set_fixed_p(const int &index, const double &value);
-      
+
       /**
        * \brief unfreezes a parameter.
        * @param index dimenion index of the parameter to unfreeze
        */
       void unset_fixed_p(const int &index);
-      
+
       /**
        * \brief sets the maximum number of restarts (applies to IPOP and BIPOP).
        * @param nrestarts maximum number of restarts
@@ -259,7 +259,7 @@ namespace libcmaes
 	    _elitist = _initial_elitist = false;
 	  }
       }
-      
+
       /**
        * \brief all stopping criteria are active by default, this allows to control
        *        them
@@ -270,6 +270,42 @@ namespace libcmaes
 					const bool &active)
       {
 	_stoppingcrit.insert(std::pair<int,bool>(criteria,active));
+      }
+
+      /**
+       * \brief returns whether elitist is on
+       * @return whether elitist is on
+       */
+      bool elitist() const
+      {
+          return _elitist;
+      }
+
+      /**
+       * \brief returns whether initial_elitist is on
+       * @return whether initial_elitist is on
+       */
+      bool initial_elitist() const
+      {
+          return _initial_elitist;
+      }
+
+      /**
+       * \brief returns whether initial_elitist_on_restart is on
+       * @return whether initial_elitist_on_restart is on
+       */
+      bool initial_elitist_on_restart() const
+      {
+          return _initial_elitist_on_restart;
+      }
+
+      /**
+       * \brief get mu.
+       * @return mu
+       */
+      inline int mu() const
+      {
+          return _mu;
       }
 
       /**
@@ -284,7 +320,7 @@ namespace libcmaes
        * @param d dsigma
        */
       void set_tpa_dsigma(const double &d) { _dsigma = d; }
-      
+
     private:
       int _mu; /**< number of candidate solutions used to update the distribution parameters. */
       dVec _weights; /**< offsprings weighting scheme. */
@@ -294,18 +330,18 @@ namespace libcmaes
       double _cc; /**< cumulation constant for pc. */
       double _muw; /**< \sum^\mu _weights .*/
       double _dsigma; /**< step size damping factor. */
-      
+
       // computed once at init for speeding up operations.
       double _fact_ps;
       double _fact_pc;
       double _chi; /**< norm of N(0,I) */
-      
+
       double _sigma_init; /**< initial sigma value. */
-      
+
       int _nrestarts = 9; /**< maximum number of restart, when applicable. */
       bool _lazy_update; /**< covariance lazy update. */
       double _lazy_value; /**< reference trigger for lazy update. */
-      
+
       // active cma.
       double _cm; /**< learning rate for the mean. */
       double _alphacov; /**< = 2 (active CMA only) */
@@ -313,15 +349,15 @@ namespace libcmaes
       double _deltamaxsigma; /**< infinite (active CMA only) */
       double _lambdamintarget; /**< = 0.66 (active CMA only) */
       double _alphaminusmin; /**< = 1 (active CMA only) */
-      
+
       // sep cma (diagonal cov).
       bool _sep = false; /**< whether to use diagonal covariance matrix. */
       bool _vd = false;
-      
+
       bool _elitist = false; /**< re-inject the best-ever seen solution. */
       bool _initial_elitist = false; /**< re-inject x0. */
       bool _initial_elitist_on_restart = false; /**< activate the restart from and re-injection of the best seen solution if not the final one. */
-      
+
       // stopping criteria
       std::map<int,bool> _stoppingcrit; /**< control list of stopping criteria. */
     };

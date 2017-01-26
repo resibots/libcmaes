@@ -492,6 +492,15 @@ namespace libcmaes
     }
 
     /**
+     * \brief returns number of reevaluated solutions at current step
+     * @return number of reevaluated solutions at current step
+     */
+    inline int lambda_reev() const
+    {
+      return _lambda_reev;
+    }
+
+    /**
      * \brief print the solution object out.
      * @param out output stream
      * @param verb_level verbosity level: 0 for short, 1 for debug.

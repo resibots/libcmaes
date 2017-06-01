@@ -34,7 +34,7 @@ FitFunc fsphere = [](const double *x, const int N)
 
 int main(int argc, char *argv[])
 {
-  int dim = 10; // problem dimensions.
+  const int dim = 10; // problem dimensions.
   double sigma = 0.1;
   double lbounds[dim],ubounds[dim]; // arrays for lower and upper parameter bounds, respectively
   for (int i=0;i<dim;i++)
@@ -47,7 +47,9 @@ int main(int argc, char *argv[])
   CMAParameters<GenoPheno<pwqBoundStrategy>> cmaparams(x0,sigma,-1,0,gp); // -1 for automatically decided lambda, 0 is for random seeding of the internal generator.
   cmaparams.set_algo(aCMAES);
   CMASolutions cmasols = cmaes<GenoPheno<pwqBoundStrategy>>(fsphere,cmaparams);
-  std::cout << "best solution: " << cmasols << std::endl;
+  std::cout << "best solution: ";
+  cmasols.print(std::cout,0,gp);
+  std::cout << std::endl;
   std::cout << "optimization took " << cmasols.elapsed_time() / 1000.0 << " seconds\n";
   return cmasols.run_status();
 }

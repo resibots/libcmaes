@@ -3,7 +3,7 @@ include_directories (${PROJECT_SOURCE_DIR}/src)
 
 macro (cmaes_add_test name)
   add_executable (t_${name} ${name}.cc)
-  target_link_libraries (t_${name} cmaes)
+  target_link_libraries (t_${name} cmaes ${LIBCMAES_DEPS})
   add_test (NAME ${name} COMMAND t_${name})
 endmacro ()
 

@@ -13,7 +13,8 @@ option (BUILD_SHARED_LIBS "Build libcmaes as a shared library" ON)
 option (BUILD_PYTHON "build python bindings" ON)
 option (BUILD_TESTS "build tests" ON)
 option (BUILD_EXAMPLES "build examples" ON)
-option (USE_OPENMP "Use OpenMP for multithreading" ON)
+option (USE_OPENMP "Use OpenMP for multithreading" OFF)
+option (USE_TBB "Use TBB for multithreading" ON)
 option (ENABLE_SURROG "support for surrogates" ON)
 set (HAVE_SURROG ${ENABLE_SURROG})
 option (USE_COMPILE_FEATURES "use cmake>=3.1 cxx11 detection" ON)
@@ -62,6 +63,10 @@ find_package (Eigen3 REQUIRED)
 include_directories (${EIGEN3_INCLUDE_DIRS})
 message(STATUS "Eigen3 found: ${EIGEN3_INCLUDE_DIRS}")
 
+if (USE_OPENMP AND USE_TBB)
+  message (FATAL_ERROR "You should not use both OpenMP and TBB for parallelization together!")
+endif ()
+
 # omp
 if (USE_OPENMP)
   find_package (OpenMP)
@@ -70,6 +75,17 @@ if (USE_OPENMP)
   endif ()
 endif ()
 
+set(LIBCMAES_DEPS "")
+
+if (USE_TBB)
+  find_package (TBB)
+  if (TBB_FOUND)
+    add_definitions (-DUSE_TBB)
+    include_directories (${TBB_INCLUDE_DIRS})
+    # should use ${TBB_LIBRARIES} but it is not working properly
+    set (LIBCMAES_DEPS "tbb")
+  endif ()
+endif ()
 
 if (CMAKE_VERSION VERSION_LESS 3.1 OR NOT USE_COMPILE_FEATURES)
   check_cxx_compiler_flag ("-std=c++11" SUPPORTS_STDCXX11)

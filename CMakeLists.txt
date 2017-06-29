@@ -64,7 +64,7 @@ include_directories (${EIGEN3_INCLUDE_DIRS})
 message(STATUS "Eigen3 found: ${EIGEN3_INCLUDE_DIRS}")
 
 if (USE_OPENMP AND USE_TBB)
-  message (FATAL_ERROR "You should not use both OpenMP and TBB for parallelization together!")
+  message (FATAL_ERROR "You should not use both OpenMP and TBB for parallelization!")
 endif ()
 
 # omp

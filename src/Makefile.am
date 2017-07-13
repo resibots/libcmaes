@@ -19,7 +19,7 @@ AM_CPPFLAGS += -I$(TBB_INC) -DUSE_TBB
 AM_LDFLAGS=-L$(TBB_LIB)
 LDADD=-ltbb
 endif
-AM_CXXFLAGS=-Wall -Wextra -g -O3 -mavx -mfma
+AM_CXXFLAGS=-Wall -Wextra -g -O3 -march=native
 if !HAVE_CLANG
 AM_CXXFLAGS += -fopenmp
 endif

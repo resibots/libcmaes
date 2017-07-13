@@ -27,7 +27,7 @@ endif
 endif
 
 AM_CPPFLAGS=-I$(top_srcdir)/src/ -I$(EIGEN3_INC) $(GFLAGS_CFLAGS)
-AM_CXXFLAGS=-Wall -Wextra -g -O3 -mavx -mfma
+AM_CXXFLAGS=-Wall -Wextra -g -O3 -march=native
 if !HAVE_CLANG
 AM_CXXFLAGS+=-fopenmp
 endif

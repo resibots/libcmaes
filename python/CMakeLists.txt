@@ -1,7 +1,9 @@
 
 include_directories (${PROJECT_SOURCE_DIR}/src)
+include_directories (${PROJECT_BINARY_DIR}/src)
 include_directories (${PYTHON_INCLUDE_DIR})
 include_directories (${NUMPY_INCLUDE_DIRS})
+include_directories (${Boost_INCLUDE_DIRS})
 
 python_add_module (lcmaes lcmaes.cc)
 target_link_libraries(lcmaes cmaes ${Boost_LIBRARIES} ${LIBCMAES_DEPS})
@@ -9,7 +11,7 @@ if (LINK_PYTHON)
   target_link_libraries(lcmaes ${PYTHON_LIBRARIES} ${LIBCMAES_DEPS})
 endif ()
 
-install (TARGETS lcmaes DESTINATION ${PYTHON_SITE_DIR})
+install (TARGETS lcmaes DESTINATION ${PYTHON_SITE_PACKAGES})
 
 set (PYINSTALLCHECK_ENVIRONMENT "PYTHONPATH=${CMAKE_CURRENT_BINARY_DIR}")
 

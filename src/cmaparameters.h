@@ -242,7 +242,7 @@ namespace libcmaes
       inline void set_elitism(const int &e)
       {
 	if (e == 0)
-	  _elitist = _initial_elitist = _initial_elitist_on_restart;
+	  _elitist = _initial_elitist = _initial_elitist_on_restart = false;
 	else if (e == 1)
 	  {
 	    _elitist = true;
@@ -258,6 +258,30 @@ namespace libcmaes
 	    _initial_elitist_on_restart = true;
 	    _elitist = _initial_elitist = false;
 	  }
+      }
+
+      /**
+       * \brief get elitist
+       */
+      inline bool elitist() const
+      {
+        return _elitist;
+      }
+
+      /**
+       * \brief get initial elitist
+       */
+      inline bool initial_elitist() const
+      {
+        return _initial_elitist;
+      }
+
+      /**
+       * \brief get initial elitist on restart
+       */
+      inline bool initial_elitist_on_restart() const
+      {
+        return _initial_elitist_on_restart;
       }
       
       /**

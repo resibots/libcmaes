@@ -95,6 +95,15 @@ namespace libcmaes
 		       const dMat &eigenvectors);
 
     /**
+     * \brief returns the initial candidate.
+     * @return initial candidate
+     */
+    inline Candidate initial_candidate() const
+    {
+      return _initial_candidate;
+    }
+
+    /**
      * \brief returns current best solution candidate.
      *        NOTE: candidates MUST be sorted
      * @return current best candidate

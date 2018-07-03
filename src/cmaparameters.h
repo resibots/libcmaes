@@ -308,6 +308,11 @@ namespace libcmaes
        * @param d dsigma
        */
       void set_tpa_dsigma(const double &d) { _dsigma = d; }
+
+      /**
+       * \brief get mu: number of candidate solutions used to update the distribution parameters
+       */
+      inline int mu() const { return _mu; }
       
     private:
       int _mu; /**< number of candidate solutions used to update the distribution parameters. */

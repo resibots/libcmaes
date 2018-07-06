@@ -481,6 +481,15 @@ namespace libcmaes
     {
       return _leigenvectors;
     }
+
+    /**
+     * \brief returns the number of reevaluated solutions at current step
+     * @return the number of reevaluated solutions at current step
+     */
+    inline int lambda_reev() const
+    {
+      return _lambda_reev;
+    }
     
     /**
      * \brief print the solution object out.
